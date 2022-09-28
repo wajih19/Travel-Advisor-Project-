@@ -11,6 +11,10 @@ const App =()=> {
   const[places,setPlaces]=useState([]);
   const[coordinates,setCoordinates]=useState({lat:0,lng:0});
   const[bounds, setBounds]=useState({});
+  const[loading,setLoading]=useState(false);
+  const[rating, setRating]= useState('');
+  const[filteredPlaces, setFilteredPlaces]=useState([]);
+  const[type, setType]=useState('restaurants');
 
 
   useEffect(()=>{
@@ -24,16 +28,26 @@ const App =()=> {
   },[]);
 
   useEffect(()=>{
+
+    const filtered= places.filter((place)=>Number(place.rating)>rating);
+    setFilteredPlaces(filtered);
+
+
+  },[rating]);
+
+  useEffect(()=>{
     console.log(coordinates,bounds);
 
-    getPlacesData(bounds.sw, bounds.ne)
+    setLoading(true);
+
+    getPlacesData(type,bounds.sw, bounds.ne)
       .then((data)=>{
           console.log(data);
-
+        setLoading(false);
           setPlaces(data);
       })
 
-     },[coordinates,bounds]);
+     },[type,coordinates,bounds]);
 
   return (
     <div>
@@ -41,7 +55,14 @@ const App =()=> {
       <Header/>
       <Grid container spacing={3} style={{width:'100%'}}>
         <Grid item xs={12} md={4}>
-        <List places={places}/>
+        <List 
+        places={filteredPlaces.length? filteredPlaces: places}
+        type={type}
+        setType={setType}
+        loading={loading}
+        rating={rating}
+        setRating={setRating}
+        />
         </Grid>
         <Grid item xs={12} md={8}>
          <Map 
