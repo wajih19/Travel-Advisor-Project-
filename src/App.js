@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from './components/Header/Header';
 import Map from './components/Map/Map';
 import List from './components/List/List';
+import { getWeatherData } from './api';
 import { getPlacesData } from './api';
 import PlaceDetails from "./components/PlaceDetails/PlaceDetails";
 import { CssBaseline,Grid } from '@material-ui/core';
@@ -15,6 +16,7 @@ const App =()=> {
   const[rating, setRating]= useState('');
   const[filteredPlaces, setFilteredPlaces]=useState([]);
   const[type, setType]=useState('restaurants');
+  // const[weatherData,setWeatherData]=useState([]);
 
 
   useEffect(()=>{
@@ -45,7 +47,13 @@ const App =()=> {
           console.log(data);
         setLoading(false);
           setPlaces(data);
-      })
+      });
+
+    // getWeatherData(coordinates.lat,coordinates.lng)
+    //     .then((data)=>{
+    //       setWeatherData(data)
+    //     });
+        
 
      },[type,coordinates,bounds]);
 
@@ -69,6 +77,7 @@ const App =()=> {
          setCoordinates={setCoordinates}
          setBounds={setBounds} 
          coordinates={coordinates}
+        //  weatherData={weatherData}
          />
          
          </Grid>
